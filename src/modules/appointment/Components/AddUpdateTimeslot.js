@@ -52,14 +52,13 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 // Components
-import {TablePaginationActions} from '../../../common/Pagination';
-import {useCommonStyles} from '../../../common/StyleComman.js';
-import useSignUpForm from '../../franchise/CustomHooks';
-import validate from '../../../common/validation/AppointmentTimeslotDialog';
-import {getDate, setTime, getCurrentDate, getTimeinDBFormat, get12HourTime } from '../../../../utils/datetime'
+
+import customHooks from '../../../common/CustomHooks';
+import validate from '../../../validations/AppointmentTimeslotDialog.js';
+import {getDate, setTime, getCurrentDate, getTimeinDBFormat, get12HourTime } from '../../../utils/datetime'
 
 // API 
-import AppointmentAPI from '../../../../api/Appointment.js';
+import AppointmentAPI from '../../../api/Appointment.js';
 
 
 
@@ -118,6 +117,14 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(10),
     margin: theme.spacing(1),
   },
+  closeIcon: {
+    marginTop:theme.spacing(-3),
+    color: 'white', 
+    fontSize: theme.typography.pxToRem(14),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    marginRight:theme.spacing(-1),
+  },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -132,7 +139,7 @@ const RESET_VALUES = {
 };
 
 export default function AddUpdateTimeslot({open, handleClose, operation, selectedTimeslot, setCurrentTimeslotList}) {
-  const styleClass = useCommonStyles();
+  
   const classes = useStyles();    
 
   const [ploading, setpLoading] = React.useState(false);
@@ -169,7 +176,7 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
     }
   }
   
-  const { inputs, handleDateChange, handleSubmit, handleRandomInput, setInput, errors } = useSignUpForm(    
+  const { inputs, handleDateChange, handleSubmit, handleRandomInput, setInput, errors } = customHooks(    
     RESET_VALUES,
     submitTimeslot,
     validate
@@ -183,7 +190,7 @@ export default function AddUpdateTimeslot({open, handleClose, operation, selecte
             <Typography variant="h6" className={classes.title}>
               Add Timeslot
             </Typography>              
-            <IconButton size="small" onClick={handleClose} className={styleClass.closeIcon}> x </IconButton>
+            <IconButton size="small" onClick={handleClose} className={classes.closeIcon}> x </IconButton>
           </Toolbar>
         </AppBar>
         <div className={classes.root}>

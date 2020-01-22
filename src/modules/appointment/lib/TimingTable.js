@@ -1,4 +1,4 @@
-import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../utils/datetime';
 import moment from 'moment';
 
 export const generateTimingTable = () => {

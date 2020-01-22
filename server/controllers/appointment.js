@@ -1,18 +1,15 @@
 const Appointment = require('../models/appointment.js');
 // const Role = require('../models/franchise/role.js');
-// const {addOneDay, getCurrentDateDBFormat, escapeSunday} = require('../utils/datetime.js');
+const {addOneDay, getCurrentDateDBFormat, escapeSunday} = require('../utils/datetime.js');
 
 const membersList = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
-	}
 
+	}
   try {
 		const newActivity = new Appointment(params);
 		
-		const role = await new Role({}).all();
-
-
+		const role = await newActivity.getRoleList();
 		await newActivity.inActiveDueDatedTimeslot();
 		const membersList = await newActivity.membersList();
 				

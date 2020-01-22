@@ -23,7 +23,7 @@ var Appointment = function (params) {
 };
 
 
-Appointment.prototype.membersList = function () {
+Appointment.prototype.getRoleList = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -32,7 +32,7 @@ Appointment.prototype.membersList = function () {
       }
       
       connection.changeUser({database : dbName});
-      connection.query('select u.id, u.name, u.role_id, s.email, s.contact from user as u INNER JOIN staff as s ON s.franchise_user_id = u.id WHERE u.status = 1 AND u.is_active = 1', function (error, rows, fields) {        
+      connection.query('select * from role where is_active = 1', function (error, rows, fields) { 
         if (error) {  console.log("Error...", error); reject(error);  }
           
         resolve(rows);              
@@ -42,6 +42,31 @@ Appointment.prototype.membersList = function () {
     });
   });
 }
+
+
+
+
+Appointment.prototype.membersList = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      
+      connection.changeUser({database : dbName});
+      connection.query('select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1', function (error, rows, fields) { 
+        if (error) {  console.log("Error...", error); reject(error);  }
+          
+        resolve(rows);              
+      });
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+}
+
+
 
 
 Appointment.prototype.inActiveDueDatedTimeslot = function () {
@@ -75,7 +100,7 @@ Appointment.prototype.createTimeslot = function (userId, date, meeting_time, sta
       
       connection.query('INSERT INTO appointment_timeslot(User_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }          
-        resolve(rows);        
+        resolve(rows);
       });
         connection.release();
         console.log('Process Complete %d', connection.threadId);

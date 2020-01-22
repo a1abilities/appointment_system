@@ -35,30 +35,21 @@ import MenuItem from '@material-ui/core/MenuItem';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker, KeyboardDatePicker} from '@material-ui/pickers';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
 import TextField from '@material-ui/core/TextField';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-import Popover from '@material-ui/core/Popover';
-import PropTypes from 'prop-types';
-import {TablePaginationActions} from '../../../common/Pagination';
+
 
 
 // Component
-import {useCommonStyles} from '../../../common/StyleComman.js';
-import useSignUpForm from '../../franchise/CustomHooks';
-import validate from '../../../common/validation/BookingAppointment.js';
-import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import validate from '../../../validations/BookingAppointment.js';
+import {getDate, setTime, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../utils/datetime';
 import {generateTimingTable} from '../lib/TimingTable';
 import TimingBoard from './TimingBoard.js';
+import customHooks from '../../../common/CustomHooks';
+
 
 // API
-import AppointmentAPI from '../../../../api/Appointment.js';
+import AppointmentAPI from '../../../api/Appointment.js';
 import moment from 'moment';
 
 
@@ -223,7 +214,7 @@ export default function BookAppointment({handleMainPage, userData}) {
     resetTiming();
   }
   
-  const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = useSignUpForm(    
+  const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = customHooks(    
     RESET_VALUES,
     submitForm,
     validate,

@@ -25,32 +25,17 @@ import CommentIcon from '@material-ui/icons/Comment';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+
 import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
-import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-import { API_URL } from '../../../../api/Constants';
-import {useCommonStyles} from '../../../common/StyleComman';
-import Popover from '@material-ui/core/Popover';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
-import {TablePaginationActions} from '../../../common/Pagination';
 import moment from 'moment';
 
 // Components
 import AddUpdateTimeslot from './AddUpdateTimeslot';
-import {getDate, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../../utils/datetime';
+import {getDate, getCurrentDate, getTimeinDBFormat, getTime, get12HourTime } from '../../../utils/datetime';
 
 // API Call
-import AppointmentAPI from '../../../../api/Appointment.js';
+import AppointmentAPI from '../../../api/Appointment.js';
 
 
 const StyledTableCell = withStyles(theme => ({

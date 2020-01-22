@@ -3,14 +3,14 @@ import { makeStyles  } from '@material-ui/core/styles';
 
 
 // Add Components
-import {getCurrentDate, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../utils/datetime';
+import {getCurrentDate, getCurrentDateDBFormat, getCurrentDateDDMMYYYY, getDate, getDateInDDMMYYYY} from '../../utils/datetime';
 import HomeTable from './Components/HomeTable.js';
-// import BookAppointment from './Components/BookAppointment.js';
+import BookAppointment from './Components/BookAppointment.js';
 // import ViewAppointment from './Components/ViewAppointment.js';
 // import UpdateTimeslot from './Components/UpdateTimeslot.js';
 
 // API CALL
-// import AppointmentAPI from '../../../api/Appointment.js';
+import AppointmentAPI from '../../api/Appointment.js';
 
 const useStyles = makeStyles(theme => ({
   labelTitle: {
@@ -44,10 +44,10 @@ export default function AppointmentHome() {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };    
+  };
 
   
-  const handleMainPage = async () => {   
+  const handleMainPage = async () => {
     setShowBookAppointment(false);
     setShowViewAppointment(false);
     setShowUpdateTimeslot(false);
@@ -81,19 +81,20 @@ export default function AppointmentHome() {
     setShowUpdateTimeslot(true);
   }
 
-  // const fetchMemberList = async () => {
-  //   try{
-  //     const result = await AppointmentAPI.membersList();
-  //     setMembersList(result.membersList);
-  //     setRoleList(result.roleList);      
-  //   }catch(e){
-  //     console.log('fetchMemberList error...', e);
-  //   }
-  // }
+  const fetchMemberList = async () => {
+    try{
+      const result = await AppointmentAPI.membersList();
+      console.log('result', result)
+      setMembersList(result.membersList);
+      setRoleList(result.roleList);
+    }catch(e){
+      console.log('fetchMemberList error...', e);
+    }
+  }
 
   
   useEffect(() => {   
-    // fetchMemberList();
+    fetchMemberList();
   }, []);
 
 
@@ -104,9 +105,10 @@ export default function AppointmentHome() {
         handleUpdateTimeSlot = {handleUpdateTimeSlot}
         page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} /> 
       }
-    {/*    {
+      {
         showBookAppointment && <BookAppointment handleMainPage = {handleMainPage} userData = {selectedUserData} /> 
       }
+      {/* 
       {
         showViewAppointment && <ViewAppointment handleMainPage = {handleMainPage} userData = {selectedUserData}  /> 
       }

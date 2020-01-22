@@ -18,6 +18,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import SendIcon from '@material-ui/icons/Send.js';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
+import Paper from '@material-ui/core/Paper';
+
 import CommentIcon from '@material-ui/icons/Comment';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
@@ -37,8 +39,9 @@ import TableFooter from '@material-ui/core/TableFooter';
 import DetailsIcon from '@material-ui/icons/Details';
 
 
-
+// Components
 import {TablePaginationActions} from '../../../common/Pagination';
+import SelectFilter from './SelectFilter.js';
 // import { APP_TOKEN } from '../../../../api/Constants';
 
 
@@ -62,36 +65,49 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(20),
     color: theme.palette.text.secondary,        
   },
+  root: {
+    flexGrow: 1,
+  },
+  
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+  },
 }));
 
 export default function HomeTable({membersList, roleList,  
   handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
-  // const userId = Number(APP_TOKEN.get().userId);
   const classes = useStyles();    
 
-  // const handleUserRoles = (data) => {
-  //   let roles = '';
+  const handleUserRoles = (data) => {
+    let roles = '';
 
-  //   ((data.role_id && data.role_id.split(',')) || []).map((a, index) =>{      
-  //     (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
-  //       if(data.role_id.split(',').length-1 === index && data.role_id.split(',')[index] == ele.id){
-  //         roles = roles + ele.name
-  //       }else if(data.role_id.split(',')[index] == ele.id){
-  //         roles = roles + ele.name + ", "
-  //       }
-  //     })
-  //   })
-  //   return roles;
-  // }
+    ((data.role_id && data.role_id.split(',')) || []).map((a, index) =>{      
+      (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
+        if(data.role_id.split(',').length-1 === index && data.role_id.split(',')[index] == ele.id){
+          roles = roles + ele.name
+        }else if(data.role_id.split(',')[index] == ele.id){
+          roles = roles + ele.name + ", "
+        }
+      })
+    })
+    return roles;
+  }
   
-    return (  
-    <Grid container spacing={2} alignItems = "center">
-      <Grid item xs={12} sm={12}>
-        <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
-      </Grid>
-      <Grid item xs={12} sm={12}>
+  return ( 
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">>
+          <Grid item xs={12} sm={10}>
+            <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
+          </Grid>
+          <Grid item xs={12} sm={10}>
+            <SelectFilter />
+          </Grid>
+          <Grid item xs={12} sm={10}>
         <Table stickyHeader >
           <TableHead>
             <TableRow>
@@ -104,7 +120,7 @@ export default function HomeTable({membersList, roleList,
             </TableRow>
           </TableHead>
           <TableBody>        
-              {/* {membersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
+              {membersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
                 return(
                   <TableRow key={Math.random()}>
                       <StyledTableCell>{index + 1}</StyledTableCell>
@@ -125,7 +141,7 @@ export default function HomeTable({membersList, roleList,
 
                         <Tooltip title="View Appointment">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }} disabled = {userId !== data.id} >
+                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }}  >
                               <DateRangeIcon /> 
                             </IconButton>
                           </span>
@@ -133,7 +149,7 @@ export default function HomeTable({membersList, roleList,
 
                         <Tooltip title="Update Timeslot">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }} disabled = {userId !== data.id} >
+                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }}  >
                               <EditIcon />
                             </IconButton>
                           </span>
@@ -142,7 +158,7 @@ export default function HomeTable({membersList, roleList,
                     </TableRow>
                   )
                 })
-              } */}
+              }
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -164,5 +180,7 @@ export default function HomeTable({membersList, roleList,
         </Table>    
       </Grid>
     </Grid>
+    </Paper>
+  </div> 
   )
 }
