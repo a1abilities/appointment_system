@@ -23,6 +23,7 @@ export default function AppointmentHome() {
   
   const [membersList, setMembersList] = React.useState([]);
   const [roleList, setRoleList] = useState([]);  
+  const [filterTabData, setFilterTabData] = useState([]);  
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -46,15 +47,25 @@ export default function AppointmentHome() {
     }
   }
 
+  const fetchRequiredList = async () => {
+    try{
+      const result = await AppointmentAPI.fetchRequiredList();
+      setFilterTabData(result);
+    }catch(e){
+      console.log('fetchRequiredList error...', e);
+    }
+  }
+
   
   useEffect(() => {   
     fetchMemberList();
+    fetchRequiredList();
   }, []);
 
 
   return (
     <div>   
-      { membersList && <HomeTable membersList = {membersList} roleList = {roleList} 
+      { membersList && <HomeTable membersList = {membersList} roleList = {roleList} filterTabData = {filterTabData} 
         page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />
       }
     </div>

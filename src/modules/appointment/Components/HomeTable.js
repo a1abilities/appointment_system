@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomeTable({membersList, roleList,  
+export default function HomeTable({membersList, roleList, filterTabData,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
   const classes = useStyles();    
@@ -80,7 +80,7 @@ export default function HomeTable({membersList, roleList,
             <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
           </Grid>
           <Grid item xs={12} sm={10}>
-            <SelectFilter />
+            <SelectFilter filterTabData = {filterTabData} />
           </Grid>
           <Grid item xs={12} sm={10}>
         <Table stickyHeader >

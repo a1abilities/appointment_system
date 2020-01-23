@@ -183,6 +183,17 @@ const getAppointedClientList = async function (req, res, next) {
 }
 
 
+const fetchRequiredList = async function (req, res, next) {
+  try {
+		const franchiseList = await new Appointment({}).fetchFranchiseList();
+		const userList = await new Appointment({}).fetchUserList();
+		const roleList = await new Appointment({}).getRoleList();
+		res.send({ franchiseList: franchiseList,  userList: userList, roleList: roleList});
+	} catch (err) {
+		next(err);
+	}
+}
+
 
 module.exports = { 
 	membersList: membersList, 
@@ -192,5 +203,6 @@ module.exports = {
 	removeTimeSlot : removeTimeSlot,
 	bookAppointment : bookAppointment,
 	fetchBookedAppointmentList : fetchBookedAppointmentList,
-	getAppointedClientList : getAppointedClientList
+	getAppointedClientList : getAppointedClientList,
+	fetchRequiredList : fetchRequiredList
  };

@@ -2,9 +2,6 @@ const connection = require("../lib/connection.js");
 const {dbName} = require("../lib/connection.js");
 
 var Appointment = function (params) {
-  this.user_id = params.user_id;
-  this.created_by = params.created_by;
-
   this.userId = params.userId;
   this.appointmentId = params.appointmentId;
   this.appointment_status = params.appointment_status;
@@ -24,7 +21,6 @@ var Appointment = function (params) {
 
 
 Appointment.prototype.getRoleList = function () {
-  const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       if (error) {
@@ -44,6 +40,47 @@ Appointment.prototype.getRoleList = function () {
 }
 
 
+
+
+Appointment.prototype.fetchUserList = function () {
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      
+      connection.changeUser({database : dbName});
+      connection.query('select * from user where is_active = 1', function (error, rows, fields) { 
+        if (error) {  console.log("Error...", error); reject(error);  }
+          
+        resolve(rows);              
+      });
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+}
+
+
+
+Appointment.prototype.fetchFranchiseList = function () {
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      
+      connection.changeUser({database : dbName});
+      connection.query('select * from franchise', function (error, rows, fields) { 
+        if (error) {  console.log("Error...", error); reject(error);  }
+          
+        resolve(rows);              
+      });
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+}
 
 
 Appointment.prototype.membersList = function () {

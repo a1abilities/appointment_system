@@ -5,8 +5,8 @@ const Appointment = require('../controllers/appointment.js');
 
 const appointmentRouter = express.Router();
 
-// appointmentRouter.route("/register").post(validateToken, Appointment.register);
 appointmentRouter.route("/membersList").get(Appointment.membersList);
+appointmentRouter.route("/fetchRequiredList").get(Appointment.fetchRequiredList);
 appointmentRouter.route("/getCurrentTimeslot").post(Appointment.getCurrentTimeslot);
 appointmentRouter.route("/handleLeave").post(Appointment.handleLeave);
 appointmentRouter.route("/addOrUpdateTimeslot").post(Appointment.addOrUpdateTimeslot);
