@@ -1,58 +1,44 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import Home from './modules/appointment/AppointmentHome.js'
+
+
+
+import PageLoader from './common/PageLoader';
+
+
+const UserList = lazy(()=> import('./modules/appointment/AppointmentHome.js'));
+const BookAppointment = lazy(() => import('./modules/appointment/Components/BookAppointment.js'));
+const ViewAppointment = lazy(() => import('./modules/appointment/Components/ViewAppointment.js'));
+const UpdateTimeslot  = lazy(() => import('./modules/appointment/Components/UpdateTimeslot.js'));
 
 const App = () => {
   return(
-  <Router>
-    <Switch>
-    {/* <Route path="/">
-      <Redirect to="/userlist" from="/" />
-    </Route> */}
-    <Route path="/userlist">
-      <Home />
-    </Route>
-    </Switch>
-  </Router>
+    <Router>
+      <Suspense fallback={<PageLoader />}>
+        <Switch>
+          <Route  exact path="/" render={() => <Redirect to="/userlist" />} />
+          <Route  exact path="/userlist"
+                  render={props => { return <UserList {...props} /> }} 
+          />
+          <Route  exact path="/bookappointment"
+                  render={props => { return <BookAppointment {...props.location.state} /> }} 
+          />
+          <Route  exact path="/viewappointment"
+                  render={props => { return <ViewAppointment {...props.location.state} /> }} 
+          />
+          <Route  exact path="/updatetimeslot"
+                  render={props => { return <UpdateTimeslot {...props.location.state} /> }} 
+          />          
+        </Switch>
+      </Suspense>
+    </Router>
   )
 };
 
+
+App.propTypes = {
+  location: PropTypes.object, // React Router Passed Props
+};
+
 export default App;
-
-
-// import React, { Fragment } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap';
-// import Header from './modules/partials/header.js';
-// import Footer from './modules/partials/footer.js';
-// import Home from './modules/appointment/AppointmentHome.js'
-
-// function App() {
-//   return (
-//     <Fragment>
-//       {/* <Header /> */}
-//       {/* <Footer /> */}
-//       <Home />
-//     </Fragment>
-//     // <div className="App">
-//     //   <header className="App-header">
-//     //     <img src={logo} className="App-logo" alt="logo" />
-//     //     <p>
-//     //       Edit <code>src/App.js</code> and save to reload.
-//     //     </p>
-//     //     <a
-//     //       className="App-link"
-//     //       href="https://reactjs.org"
-//     //       target="_blank"
-//     //       rel="noopener noreferrer"
-//     //     >
-//     //       Learn React
-//     //     </a>
-//     //   </header>
-//     // </div>
-//   );
-// }
-
-// export default App;

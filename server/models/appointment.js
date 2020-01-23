@@ -222,16 +222,16 @@ Appointment.prototype.bookAppointment = function () {
       connection.changeUser({database :dbName});
       
       const Values =  [
-        [that.userId, that.date, that.meeting_time, that.start_time, that.end_time, 1, 1, that.created_by] 
+        [that.userId, that.date, that.meeting_time, that.start_time, that.end_time, 1, 1] 
       ];
 
-      connection.query('INSERT INTO appointment_record (user_id, date, meeting_time, start_time, end_time, status, is_active, created_by) VALUES ?', [Values], function (error, rows, fields) {
+      connection.query('INSERT INTO appointment_record (user_id, date, meeting_time, start_time, end_time, status, is_active) VALUES ?', [Values], function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  } 
         
         const ClientData = [
-          [rows.insertId, that.userId, that.first_name, that.last_name, that.contact, that.reference, 1, 1, that.created_by]
+          [rows.insertId, that.userId, that.first_name, that.last_name, that.contact, that.reference, 1, 1]
         ];
-        connection.query('INSERT INTO appointed_client (appointment_id, user_id, first_name, last_name, contact, reference, status, is_active, created_by) VALUES ?', [ClientData], function (error, rows, fields) {
+        connection.query('INSERT INTO appointed_client (appointment_id, user_id, first_name, last_name, contact, reference, status, is_active) VALUES ?', [ClientData], function (error, rows, fields) {
           if (error) {  console.log("Error...", error); reject(error);  } 
           resolve(rows);
         });  
@@ -245,6 +245,7 @@ Appointment.prototype.bookAppointment = function () {
 
 
 Appointment.prototype.fetchBookedAppointmentList = function () {
+  
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -253,8 +254,7 @@ Appointment.prototype.fetchBookedAppointmentList = function () {
       }
       
         connection.changeUser({database : dbName});
-     // connection.query('SELECT ar.id, ar.user_id, DATE_FORMAT(ar.date,\'%Y-%m-%d\') as date, ar.meeting_time, TIME_FORMAT(ar.start_time, \'%H:%i\') as start_time, TIME_FORMAT(ar.end_time, \'%H:%i\') as end_time,  ar.status,  ar.is_active, ac.first_name, ac.last_name, ac.contact, ac.reference FROM `appointment_record` AS ar LEFT JOIN `appointed_client` as ac ON ar.id = ac.appointment_id WHERE ar.user_id = '+ that.userId +' AND ar.date = "'+ that.date +'" AND ar.is_active = 1 ORDER BY ar.date, ar.id', function (error, rows, fields) {
-        connection.query('select * from appointment_record', function (error, rows, fields) {
+        connection.query('SELECT ar.id, ar.user_id, DATE_FORMAT(ar.date,\'%Y-%m-%d\') as date, ar.meeting_time, TIME_FORMAT(ar.start_time, \'%H:%i\') as start_time, TIME_FORMAT(ar.end_time, \'%H:%i\') as end_time,  ar.status,  ar.is_active, ac.first_name, ac.last_name, ac.contact, ac.reference FROM `appointment_record` AS ar LEFT JOIN `appointed_client` as ac ON ar.id = ac.appointment_id WHERE ar.user_id = '+ that.userId +' AND ar.date = "'+ that.date +'" AND ar.is_active = 1 ORDER BY ar.date, ar.id', function (error, rows, fields) {        
         if (error) {  console.log("Error...", error); reject(error);  }
         resolve(rows);        
       });

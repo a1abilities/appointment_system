@@ -37,14 +37,12 @@ const membersList = async function (req, res, next) {
 
 const getCurrentTimeslot = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
 		userId : req.body.userId,
 	}
 
   try {
 		const newActivity = new Appointment(params);
-		const timeSlot = await newActivity.getCurrentTimeslot();
-
+		const timeSlot = await newActivity.getCurrentTimeslot();		
 		res.send({ timeSlot: timeSlot });
 	} catch (err) {
 		next(err);
@@ -54,13 +52,11 @@ const getCurrentTimeslot = async function (req, res, next) {
 
 const handleLeave = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
 		userId : req.body.userId,
 		appointmentId : req.body.appointmentId,
 		appointment_status : req.body.appointment_status,
 		date : req.body.date,
 	}
-console.log(' params', params);
   try {
 		const newActivity = new Appointment(params);		
 		await newActivity.handleLeave();
@@ -76,7 +72,6 @@ console.log(' params', params);
 
 const removeTimeSlot = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
 		userId : req.body.userId,
 		appointmentId : req.body.appointmentId,				
 	}
@@ -96,7 +91,6 @@ const removeTimeSlot = async function (req, res, next) {
 
 const addOrUpdateTimeslot = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
 		userId : req.body.userId,
 		appointmentId : req.body.appointmentId,
 		date : req.body.date,
@@ -126,9 +120,6 @@ const addOrUpdateTimeslot = async function (req, res, next) {
 
 const bookAppointment = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
-		created_by: req.decoded.id,
-
 		userId : req.body.userId,
 		date : req.body.date,
 		meeting_time : req.body.meeting_time,
@@ -159,17 +150,14 @@ const bookAppointment = async function (req, res, next) {
 
 
 const fetchBookedAppointmentList = async function (req, res, next) {
-	const params = {
-		// user_id: req.decoded.user_id,
-		// userId : req.body.userId,
-		// date : req.body.date,
+	const params = {		
+		userId : req.body.userId,
+		date : req.body.date,
 	}
 
   try {
-		const newActivity = new Appointment(params);
-		
-		const bookedList = await newActivity.fetchBookedAppointmentList();
-		
+		const newActivity = new Appointment(params);		
+		const bookedList = await newActivity.fetchBookedAppointmentList();		
 		res.send({ bookedList : bookedList  });
 	} catch (err) {
 		next(err);
@@ -181,14 +169,11 @@ const fetchBookedAppointmentList = async function (req, res, next) {
 
 const getAppointedClientList = async function (req, res, next) {
 	const params = {
-		user_id: req.decoded.user_id,
 		userId : req.body.userId,
 		date : req.body.date,
 	}
-console.log(params);
   try {
-		const newActivity = new Appointment(params);
-		
+		const newActivity = new Appointment(params);		
 		const clientList = await newActivity.getAppointedClientList();
 		
 		res.send({ clientList : clientList  });

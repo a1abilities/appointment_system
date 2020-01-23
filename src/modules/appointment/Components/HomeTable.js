@@ -6,49 +6,25 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CachedIcon from '@material-ui/icons/Cached';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import EditIcon from '@material-ui/icons/Edit';
-import PrintIcon from '@material-ui/icons/Print';
-import PaymentIcon from '@material-ui/icons/Payment';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import SendIcon from '@material-ui/icons/Send.js';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import Paper from '@material-ui/core/Paper';
-
-import CommentIcon from '@material-ui/icons/Comment';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
 import TablePagination from '@material-ui/core/TablePagination';
-import CreateIcon from '@material-ui/icons/Create';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import UpdateIcon from '@material-ui/icons/Update';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalanceWallet';
 import TableFooter from '@material-ui/core/TableFooter';
-import DetailsIcon from '@material-ui/icons/Details';
-
+import {Link} from 'react-router-dom';
 
 // Components
 import {TablePaginationActions} from '../../../common/Pagination';
 import SelectFilter from './SelectFilter.js';
-// import { APP_TOKEN } from '../../../../api/Constants';
 
 
 const StyledTableCell = withStyles(theme => ({
   head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: 'black',
+    color: 'white',
     fontSize: theme.typography.pxToRem(13),
   },
   body: {
@@ -77,7 +53,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function HomeTable({membersList, roleList,  
-  handleBookAppointment, handleViewAppointment, handleUpdateTimeSlot, 
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
   const classes = useStyles();    
@@ -85,7 +60,7 @@ export default function HomeTable({membersList, roleList,
   const handleUserRoles = (data) => {
     let roles = '';
 
-    ((data.role_id && data.role_id.split(',')) || []).map((a, index) =>{      
+    ((data.role_id && data.role_id.split(',')) || []).map((a, index) => {      
       (roleList != undefined && roleList != null && roleList.length > 0 ? roleList : []).map((ele)=>{
         if(data.role_id.split(',').length-1 === index && data.role_id.split(',')[index] == ele.id){
           roles = roles + ele.name
@@ -100,7 +75,7 @@ export default function HomeTable({membersList, roleList,
   return ( 
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">>
+        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
           <Grid item xs={12} sm={10}>
             <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
           </Grid>
@@ -133,25 +108,31 @@ export default function HomeTable({membersList, roleList,
                       <StyledTableCell>
                         <Tooltip title="Book Appointment">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} >
-                              <ContactPhoneIcon />  
-                            </IconButton>
+                            {/* <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} > */}
+                              <Link to= {{pathname:"/bookappointment", state : {data:data}}}>
+                                <ContactPhoneIcon />
+                              </Link>
+                            {/* </IconButton> */}
                           </span>
                         </Tooltip>
 
                         <Tooltip title="View Appointment">
-                          <span>
-                            <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }}  >
+                          <span>                            
+                            {/* <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }}  > */}
+                            <Link to= {{pathname:"/viewappointment", state : {data:data}}}>
                               <DateRangeIcon /> 
-                            </IconButton>
+                            </Link>
+                            {/* </IconButton> */}
                           </span>
                         </Tooltip>
 
                         <Tooltip title="Update Timeslot">
                           <span>
-                            <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }}  >
+                            {/* <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }}  > */}
+                            <Link to= {{pathname:"/updatetimeslot", state : {data:data}}}>
                               <EditIcon />
-                            </IconButton>
+                            </Link>
+                            {/* </IconButton> */}
                           </span>
                         </Tooltip>
                       </StyledTableCell>

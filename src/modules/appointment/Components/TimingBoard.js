@@ -171,7 +171,6 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
   }  
 
   return (  
-    <Paper style={{ width: '68%' }}>
       <Table>
         <TableBody>
           {
@@ -189,6 +188,5 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
           }
         </TableBody>
       </Table>
-    </Paper>   
   )
 }

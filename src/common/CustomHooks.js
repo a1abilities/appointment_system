@@ -63,7 +63,7 @@ const useSignUpForm = (state, callback, validate) => {
     setInputs(inputs => RESET_VALUES);    
   };
 
-  const setInput = (name, value) => {
+  const setInput = (name, value) => {    
     setInputs({
       ...inputs,
       [name]: value,
