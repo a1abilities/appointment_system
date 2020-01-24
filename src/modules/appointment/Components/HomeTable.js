@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -52,10 +52,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomeTable({membersList, roleList, filterTabData,
+export default function HomeTable({membersList, roleList, filterTabData, fetchUserByFilter,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
   const classes = useStyles();    
+  const [franchiseId, setFranchiseId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [roleId, setRoleId] = useState('');
+
 
   const handleUserRoles = (data) => {
     let roles = '';
@@ -71,6 +75,21 @@ export default function HomeTable({membersList, roleList, filterTabData,
     })
     return roles;
   }
+
+  const handleFranchiseFilter = async (event) => {
+    setFranchiseId(event.target.value);
+    fetchUserByFilter(event.target.value, roleId);
+  }
+
+  const handleUserFilter = async (event) => {
+    setUserId(event.target.value);
+  }
+
+  const handleRoleFilter = async (event) => {
+    setRoleId(event.target.value);
+    fetchUserByFilter(franchiseId, event.target.value);
+  }
+  
   
   return ( 
     <div className={classes.root}>
@@ -80,7 +99,8 @@ export default function HomeTable({membersList, roleList, filterTabData,
             <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
           </Grid>
           <Grid item xs={12} sm={10}>
-            <SelectFilter filterTabData = {filterTabData} />
+            <SelectFilter filterTabData ={filterTabData} franchiseId = {franchiseId} userId = {userId} roleId = {roleId} 
+              handleFranchiseFilter = {handleFranchiseFilter} handleUserFilter = {handleUserFilter} handleRoleFilter = {handleRoleFilter} />
           </Grid>
           <Grid item xs={12} sm={10}>
         <Table stickyHeader >
@@ -91,7 +111,7 @@ export default function HomeTable({membersList, roleList, filterTabData,
               <StyledTableCell>Designation</StyledTableCell>
               <StyledTableCell>Contact</StyledTableCell>
               <StyledTableCell>Email Id</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
+              <StyledTableCell>Action</StyledTableCell>              
             </TableRow>
           </TableHead>
           <TableBody>        

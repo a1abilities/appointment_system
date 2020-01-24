@@ -17,6 +17,10 @@ var Appointment = function (params) {
   this.contact = params.contact;
   this.reference = params.reference;
 
+  
+  this.roleId = params.roleId;
+  this.franchiseId = params.franchiseId;
+
 };
 
 
@@ -96,6 +100,37 @@ Appointment.prototype.membersList = function () {
         if (error) {  console.log("Error...", error); reject(error);  }
           
         resolve(rows);              
+      });
+        connection.release();
+        console.log('Process Complete %d', connection.threadId);
+    });
+  });
+}
+
+
+Appointment.prototype.fetchUserByFilter = function () {
+  const that = this;
+  return new Promise(function (resolve, reject) {
+    connection.getConnection(function (error, connection) {
+      if (error) {
+        throw error;
+      }
+      
+      connection.changeUser({database : dbName});
+      let query = '';
+      if(that.roleId === '' && that.franchiseId === ''){
+        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1';
+      }else if(that.roleId === '' && that.franchiseId > 0){
+        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND franchise_id = "'+that.franchiseId+'"';
+      }else if(that.roleId > 0 && that.franchiseId === ''){
+        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND role_id LIKE "%'+that.roleId+'%"';
+      }else if(that.roleId > 0 && that.franchiseId > 0){
+        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND role_id LIKE "%'+that.roleId+'%" AND franchise_id = "'+that.franchiseId+'"';
+      }
+
+      connection.query(query, function (error, rows, fields) {
+        if (error) {  console.log("Error...", error); reject(error);  }
+        resolve(rows);
       });
         connection.release();
         console.log('Process Complete %d', connection.threadId);

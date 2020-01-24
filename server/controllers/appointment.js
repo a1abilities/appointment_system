@@ -195,6 +195,22 @@ const fetchRequiredList = async function (req, res, next) {
 }
 
 
+const fetchUserByFilter = async function (req, res, next) {
+	let params = {
+		roleId : req.body.roleId,
+		franchiseId : req.body.franchiseId,
+	}
+	try {
+		const newActivity = new Appointment(params);		
+		const membersList = await newActivity.fetchUserByFilter();
+		  
+		res.send({ membersList: membersList});
+	  } catch (err) {
+		  next(err);
+	  }
+  }
+
+
 module.exports = { 
 	membersList: membersList, 
 	getCurrentTimeslot: getCurrentTimeslot, 
@@ -204,5 +220,6 @@ module.exports = {
 	bookAppointment : bookAppointment,
 	fetchBookedAppointmentList : fetchBookedAppointmentList,
 	getAppointedClientList : getAppointedClientList,
-	fetchRequiredList : fetchRequiredList
+	fetchRequiredList : fetchRequiredList,
+	fetchUserByFilter: fetchUserByFilter,
  };

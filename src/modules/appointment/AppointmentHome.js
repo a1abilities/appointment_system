@@ -56,8 +56,17 @@ export default function AppointmentHome() {
     }
   }
 
+  const fetchUserByFilter = async (franchiseId, roleId) => {
+    try{
+      const result = await AppointmentAPI.fetchUserByFilter({franchiseId: franchiseId, roleId: roleId});      
+      setMembersList(result.membersList);
+    }catch(e){
+      console.log('fetchUserByFilter error...', e);
+    }
+  }
+
   
-  useEffect(() => {   
+  useEffect(() => {
     fetchMemberList();
     fetchRequiredList();
   }, []);
@@ -65,7 +74,9 @@ export default function AppointmentHome() {
 
   return (
     <div>   
-      { membersList && <HomeTable membersList = {membersList} roleList = {roleList} filterTabData = {filterTabData} 
+      { membersList && 
+        <HomeTable  membersList = {membersList} roleList = {roleList} filterTabData = {filterTabData} 
+                    fetchUserByFilter = {fetchUserByFilter}
         page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />
       }
     </div>

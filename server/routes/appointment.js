@@ -14,5 +14,6 @@ appointmentRouter.route("/removeTimeSlot").post(Appointment.removeTimeSlot);
 appointmentRouter.route("/bookAppointment").post(Appointment.bookAppointment);
 appointmentRouter.route("/fetchBookedAppointmentList").post(Appointment.fetchBookedAppointmentList);
 appointmentRouter.route("/getAppointedClientList").post(Appointment.getAppointedClientList);
+appointmentRouter.route("/fetchUserByFilter").post(Appointment.fetchUserByFilter);
 
 module.exports = appointmentRouter;
