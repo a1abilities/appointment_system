@@ -4,17 +4,14 @@ const { env } = require("../lib/databaseMySQL");
 
 
 mainRoute.get('*', (req, res) => {
-  // console.log("path...",path.join(__dirname));
-  // console.log("path...",path.join(__dirname, '..'));
-  // console.log("path...",path.join(__dirname,'..', '..'));
-  // console.log("path...",path.join(__dirname, '..', '..', 'dist'));
-
-  const route = path.join(__dirname, '..', 'dist', 'index.html');
-  // Point static path to dist
+  
+  // const route = path.join(__dirname, '..', 'dist', 'index.html');
+  
   if (env === 'prod') {
-    // const route = path.join(__dirname, '..', 'dist', 'index.html');
+    // const route = path.join(__dirname, '..', '..', 'build', 'index.html');
     // res.sendFile(route);
   } else {
+    // const route = path.join(__dirname, '..', '..', 'build', 'index.html');
     const route = path.join(__dirname, '..', '..', 'public', 'index.html');
     res.sendFile(route);
   }
