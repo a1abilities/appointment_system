@@ -14,8 +14,16 @@ const { env } = require("./lib/databaseMySQL");
 const mainRoute = require('./routes/mainRoute');
 const appointmentRouter = require('./routes/appointment');
 
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 app.use('/api/appointment', appointmentRouter);
 app.use('/',mainRoute);
+
+ app.get(`/*`, async (request, response) => {
+    const route = path.join(__dirname, '..', 'public', 'index.html');
+    response.sendFile(route);
+  });
 
 let port ='';
 
