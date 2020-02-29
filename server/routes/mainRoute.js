@@ -7,12 +7,11 @@ mainRoute.get('*', (req, res) => {
   
   // const route = path.join(__dirname, '..', 'dist', 'index.html');
   
-  if (env === 'prod') {
-    // const route = path.join(__dirname, '..', '..', 'build', 'index.html');
-    // res.sendFile(route);
+  if (env === 'dev' || env === 'uat' || env === 'prod') {
+    const route = path.join(__dirname, '..', 'dist', 'index.html');
+    res.sendFile(route);
   } else {
-    // const route = path.join(__dirname, '..', '..', 'build', 'index.html');
-    const route = path.join(__dirname, '..', '..', 'public', 'index.html');
+    const route = path.join(__dirname, '..', '..', 'src', 'index.html');
     res.sendFile(route);
   }
 });
