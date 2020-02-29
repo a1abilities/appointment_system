@@ -41,10 +41,30 @@ export default function SelectFilter({filterTabData, franchiseId, userId, roleId
   const userList = Object.values(filterTabData)[1];
   const roleList = Object.values(filterTabData)[2];
 
-// console.log(props)
 
   return (   
-        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">            
+        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">    
+            <Grid item xs={12} sm={4}>
+                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise</InputLabel>
+                <Select
+                    name="franchise_id"
+                    onChange={handleFranchiseFilter}
+                    value={franchiseId}
+                    inputProps={{
+                        name: 'franchise_id',
+                        id: 'franchise_id',
+                    }}
+                    className={classes.drpdwn}
+                    fullWidth
+                    required
+                >
+                    <MenuItem className={classes.drpdwn} value = ''>None</MenuItem>
+                    { ((franchiseList !== undefined && franchiseList!== "" && franchiseList.length > 0) ? franchiseList : []).map((data ) => {
+                        return( <MenuItem className={classes.drpdwn} value = {data.id}> {data.franchise_name}</MenuItem> )
+                      })
+                    } 
+                </Select>
+            </Grid>        
             <Grid item xs={12} sm={4}>
                 <InputLabel  className={classes.textsize} htmlFor="role_id">Position/Role</InputLabel>
                 <Select
@@ -65,28 +85,7 @@ export default function SelectFilter({filterTabData, franchiseId, userId, roleId
                       })
                     } 
                 </Select>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise</InputLabel>
-                <Select
-                    name="franchise_id"
-                    onChange={handleFranchiseFilter}
-                    value={franchiseId}
-                    inputProps={{
-                        name: 'franchise_id',
-                        id: 'franchise_id',
-                    }}
-                    className={classes.drpdwn}
-                    fullWidth                    
-                    required
-                >
-                    <MenuItem className={classes.drpdwn} value = ''>None</MenuItem>
-                    { ((franchiseList !== undefined && franchiseList!== "" && franchiseList.length > 0) ? franchiseList : []).map((data ) => {
-                        return( <MenuItem className={classes.drpdwn} value = {data.id}> {data.franchise_name}</MenuItem> )
-                      })
-                    } 
-                </Select>
-            </Grid>
+            </Grid>            
             {/* <Grid item xs={12} sm={4}>
                 <InputLabel  className={classes.textsize} htmlFor="user_id">User</InputLabel>
                 <Select
