@@ -155,7 +155,7 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
             className={classes.timeButton} 
             style =   {
               isAvailable === false && isAlreadyBooked === false ? {backgroundColor : 'yellowgreen'} : 
-              isAlreadyBooked === true ? {backgroundColor : 'darkseagreen'} : null
+              isAlreadyBooked === true ? {backgroundColor : 'cornflowerblue'} : null
             } 
             onClick = {()=> {handleAppointTimeSelection(data)}} 
             disabled = {isAvailable || viewOnly}

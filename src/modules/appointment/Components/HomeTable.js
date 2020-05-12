@@ -96,10 +96,10 @@ export default function HomeTable({membersList, roleList, franchiseList, handleS
               <StyledTableCell>Designation</StyledTableCell>
               <StyledTableCell>Contact</StyledTableCell>
               <StyledTableCell>Email Id</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>              
+              <StyledTableCell>Action</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>        
+          <TableBody>
               {membersList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data,index) => {
                 return(
                   <TableRow key={Math.random()}>

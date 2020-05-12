@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 
@@ -11,6 +12,15 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 const { env } = require("./lib/databaseMySQL");
+
+if (env === 'dev' || env === 'uat' || env === 'prod') {
+    app.use('/', express.static(path.join(__dirname, 'dist')));
+    app.use('/dist', express.static(path.join(__dirname, 'dist')));
+} else {
+    app.use('/', express.static(path.join(__dirname, '..', 'src')));
+    app.use('/src', express.static(path.join(__dirname, '..', 'src')));
+}
+
 const mainRoute = require('./routes/mainRoute');
 const appointmentRouter = require('./routes/appointment');
 
@@ -22,7 +32,7 @@ let port ='';
 if(env === 'local'){
     port = 5000;
 }else if(env === 'prod'){
-    port = 3007;
+    port = 3008;
 }
 
 

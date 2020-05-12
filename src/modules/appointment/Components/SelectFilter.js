@@ -39,31 +39,31 @@ export default function SelectFilter({franchiseList, roleList, inputs, handleInp
   
 
   return (   
-        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">            
+        <Grid container spacing={4}  direction="row" justify="center" alignItems="center">    
             <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="role_id">Position/Role </InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Position/Role </InputLabel>
                 <Select
-                    name="role_id"
+                    name="franchise_id"
                     onChange={handleInputChange}
-                    value={inputs.role_id}
+                    value={inputs.franchise_id}
                     inputProps={{
-                        name: 'role_id',
-                        id: 'role_id',
+                        name: 'franchise_id',
+                        id: 'franchise_id',
                     }}
                     className={classes.drpdwn}
-                    fullWidth                    
+                    fullWidth
                     required
-                    error={errors.role_id}
-                      helperText={errors.role_id}
+                    error={errors.franchise_id}
+                      helperText={errors.franchise_id}
                 >
                     { ((roleList !== undefined && roleList!== "" && roleList.length > 0) ? roleList : []).map((data ) => {
                         return( <MenuItem className={classes.drpdwn} value = {data.id}>{data.name}</MenuItem> )
                       })
                     } 
                 </Select>
-            </Grid>
+            </Grid>        
             <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise</InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise List</InputLabel>
                 <Select
                     name="franchise_id"
                     onChange={handleInputChange}
