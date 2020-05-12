@@ -1,7 +1,6 @@
 const MySQL = require("mysql");
 
 let dbOptions = '';
-// let dbName = 'appointment_ms';
 const { env, dbName } = require("./databaseMySQL");
 
 if (env === 'prod') {
@@ -10,14 +9,12 @@ if (env === 'prod') {
       user: 'root',
       password: '6mNMX9Ln0oykXKic',
       port: 3306
-      // database: 'rentronics'
    };
 } else {
    dbOptions = {
       host: 'localhost',
       user: 'root',
       password: '',
-      // database: 'rentronics'
    };
 }
 

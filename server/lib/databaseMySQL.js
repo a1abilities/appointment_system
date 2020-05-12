@@ -1,17 +1,19 @@
-const env = 'prod';
-let DbName = 'a1abiliti_appointment_ms';
+const env = 'local';
+let DbName = 'a1abiliti_fme';
 let domainName = 'appoint.a1abilities.co.nz';
-// let mailPass = 'y&GFhE16U';
-// let mailService = 'rentronics.saimrc.com'
 
 console.log('env db', env);
 
 if (env === 'prod') {
-  DbName = 'a1abiliti_appointment_ms';
+  DbName = 'a1abiliti_fme';
   domainName = 'appoint.a1abilities.co.nz'
 } else {  
-  DbName = 'appointment_ms'
+  DbName = 'a1abiliti_fme'
   domainName = 'localhost:3000'
 }
+
+
+
+
 
 module.exports = { dbName: DbName, domainName: domainName, env: env };

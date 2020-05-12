@@ -2,38 +2,6 @@ const Appointment = require('../models/appointment.js');
 // const Role = require('../models/franchise/role.js');
 const {addOneDay, getCurrentDateDBFormat, escapeSunday} = require('../utils/datetime.js');
 
-const membersList = async function (req, res, next) {
-	const params = {
-
-	}
-  try {
-		const newActivity = new Appointment(params);
-		
-		const role = await newActivity.getRoleList();
-		await newActivity.inActiveDueDatedTimeslot();
-		const membersList = await newActivity.membersList();
-				
-		if(membersList != null && membersList != undefined && membersList.length > 0){
-			membersList.map(async (data, index) => {
-				let date = getCurrentDateDBFormat();
-
-				for(let i = 0; i< 7; i++){
-					await newActivity.createTimeslot(data.id, date, '15', '09:00', '18:00', 1, 1);
-					date = addOneDay(date);
-					if(escapeSunday(date)){
-						date = addOneDay(date);
-					}
-				}
-			});
-		}
-
-		res.send({ membersList: membersList, roleList: role });
-	} catch (err) {
-		next(err);
-	}
-}
-
-
 
 const getCurrentTimeslot = async function (req, res, next) {
 	const params = {
@@ -165,8 +133,6 @@ const fetchBookedAppointmentList = async function (req, res, next) {
 }
 
 
-
-
 const getAppointedClientList = async function (req, res, next) {
 	const params = {
 		userId : req.body.userId,
@@ -186,24 +152,40 @@ const getAppointedClientList = async function (req, res, next) {
 const fetchRequiredList = async function (req, res, next) {
   try {
 		const franchiseList = await new Appointment({}).fetchFranchiseList();
-		const userList = await new Appointment({}).fetchUserList();
 		const roleList = await new Appointment({}).getRoleList();
-		res.send({ franchiseList: franchiseList,  userList: userList, roleList: roleList});
+		res.send({ franchiseList: franchiseList,  roleList: roleList});
 	} catch (err) {
 		next(err);
 	}
 }
 
 
-const fetchUserByFilter = async function (req, res, next) {
+const fetchStaffList = async function (req, res, next) {
 	let params = {
 		roleId : req.body.roleId,
 		franchiseId : req.body.franchiseId,
+		fdbName : req.body.fdbName,
 	}
 	try {
-		const newActivity = new Appointment(params);		
-		const membersList = await newActivity.fetchUserByFilter();
-		  
+		const newActivity = new Appointment(params);	
+		
+		await newActivity.inActiveDueDatedTimeslot();
+		const membersList = await newActivity.fetchStaffList();
+				
+		if(membersList != null && membersList != undefined && membersList.length > 0){
+			membersList.map(async (data, index) => {
+				let date = getCurrentDateDBFormat();
+
+				for(let i = 0; i< 7; i++){
+					await newActivity.createTimeslot(params.franchiseId, data.id, date, '15', '09:00', '18:00', 1, 1);
+					date = addOneDay(date);
+					if(escapeSunday(date)){
+						date = addOneDay(date);
+					}
+				}
+			});
+		}
+		
 		res.send({ membersList: membersList});
 	  } catch (err) {
 		  next(err);
@@ -212,7 +194,6 @@ const fetchUserByFilter = async function (req, res, next) {
 
 
 module.exports = { 
-	membersList: membersList, 
 	getCurrentTimeslot: getCurrentTimeslot, 
 	handleLeave: handleLeave,
 	addOrUpdateTimeslot: addOrUpdateTimeslot,
@@ -221,5 +202,5 @@ module.exports = {
 	fetchBookedAppointmentList : fetchBookedAppointmentList,
 	getAppointedClientList : getAppointedClientList,
 	fetchRequiredList : fetchRequiredList,
-	fetchUserByFilter: fetchUserByFilter,
+	fetchStaffList: fetchStaffList,
  };

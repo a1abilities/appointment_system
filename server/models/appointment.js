@@ -2,6 +2,7 @@ const connection = require("../lib/connection.js");
 const {dbName} = require("../lib/connection.js");
 
 var Appointment = function (params) {
+  this.fdbName = params.fdbName;
   this.userId = params.userId;
   this.appointmentId = params.appointmentId;
   this.appointment_status = params.appointment_status;
@@ -32,7 +33,8 @@ Appointment.prototype.getRoleList = function () {
       }
       
       connection.changeUser({database : dbName});
-      connection.query('select * from role where is_active = 1', function (error, rows, fields) { 
+      //console.log()
+      connection.query('SELECT * FROM role WHERE id NOT IN(1,2)', function (error, rows, fields) { 
         if (error) {  console.log("Error...", error); reject(error);  }
           
         resolve(rows);              
@@ -54,7 +56,10 @@ Appointment.prototype.fetchUserList = function () {
       }
       
       connection.changeUser({database : dbName});
-      connection.query('select * from user where is_active = 1', function (error, rows, fields) { 
+      //console.log(dbName)
+      connection.query('select * from user WHERE id NOT IN(1)', function (error, rows, fields)
+      
+      { 
         if (error) {  console.log("Error...", error); reject(error);  }
           
         resolve(rows);              
@@ -87,28 +92,29 @@ Appointment.prototype.fetchFranchiseList = function () {
 }
 
 
-Appointment.prototype.membersList = function () {
-  const that = this;
-  return new Promise(function (resolve, reject) {
-    connection.getConnection(function (error, connection) {
-      if (error) {
-        throw error;
-      }
+// Appointment.prototype.membersList = function () {
+//   const that = this;
+//   return new Promise(function (resolve, reject) {
+//     connection.getConnection(function (error, connection) {
+//       if (error) {
+//         throw error;
+//       }
       
-      connection.changeUser({database : dbName});
-      connection.query('select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1', function (error, rows, fields) { 
-        if (error) {  console.log("Error...", error); reject(error);  }
+//       connection.changeUser({database : dbName});
+//       connection.query('select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1', function (error, rows, fields) { 
+//         if (error) {  console.log("Error...", error); reject(error);  }
           
-        resolve(rows);              
-      });
-        connection.release();
-        console.log('Process Complete %d', connection.threadId);
-    });
-  });
-}
+//         resolve(rows);              
+//       });
+//         connection.release();
+//         console.log('Process Complete %d', connection.threadId);
+//     });
+//   });
+// }
 
 
-Appointment.prototype.fetchUserByFilter = function () {
+
+Appointment.prototype.fetchStaffList = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -116,17 +122,9 @@ Appointment.prototype.fetchUserByFilter = function () {
         throw error;
       }
       
-      connection.changeUser({database : dbName});
+      connection.changeUser({database : that.fdbName});
       let query = '';
-      if(that.roleId === '' && that.franchiseId === ''){
-        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1';
-      }else if(that.roleId === '' && that.franchiseId > 0){
-        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND franchise_id = "'+that.franchiseId+'"';
-      }else if(that.roleId > 0 && that.franchiseId === ''){
-        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND role_id LIKE "%'+that.roleId+'%"';
-      }else if(that.roleId > 0 && that.franchiseId > 0){
-        query = 'select u.franchise_id, u.id, u.name, u.role_id, u.email, u.contact from user as u WHERE  u.is_active = 1 AND role_id LIKE "%'+that.roleId+'%" AND franchise_id = "'+that.franchiseId+'"';
-      }
+      query = 'select u.franchise_id, u.id, u.name, u.role_id, s.email, s.contact from user as u INNER JOIN staff as s ON u.id = s.franchise_user_id WHERE  u.is_active = 1 AND u.role_id LIKE "%'+that.roleId+'%"';
 
       connection.query(query, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }
@@ -149,7 +147,7 @@ Appointment.prototype.inActiveDueDatedTimeslot = function () {
         throw error;
       }
       connection.changeUser({database :dbName});
-      connection.query('UPDATE appointment_timeslot SET is_active = 0 where date < CURRENT_DATE', function (error, rows, fields) {        
+      connection.query('UPDATE appointment_timeslot SET is_active = 0 where date < CURRENT_DATE AND franchise_id = "'+that.franchiseId+'" ', function (error, rows, fields) {        
         if (error) {  console.log("Error...", error); reject(error);  }
         resolve(rows);                
       });
@@ -160,7 +158,7 @@ Appointment.prototype.inActiveDueDatedTimeslot = function () {
 }
 
 
-Appointment.prototype.createTimeslot = function (userId, date, meeting_time, start_time, end_time, status, is_active) {
+Appointment.prototype.createTimeslot = function (franchiseId, userId, date, meeting_time, start_time, end_time, status, is_active) {
   const that = this;
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
@@ -168,9 +166,9 @@ Appointment.prototype.createTimeslot = function (userId, date, meeting_time, sta
         throw error;
       }
       connection.changeUser({database :dbName});
-      const Values = [userId, date, meeting_time, start_time, end_time, status, is_active, userId, date];
-      
-      connection.query('INSERT INTO appointment_timeslot(User_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
+      const Values = [franchiseId, userId, date, meeting_time, start_time, end_time, status, is_active, userId, date];
+      console.log(Values);
+      connection.query('INSERT INTO appointment_timeslot(franchise_id, user_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }          
         resolve(rows);
       });
