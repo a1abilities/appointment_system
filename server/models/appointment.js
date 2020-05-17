@@ -21,8 +21,8 @@ var Appointment = function (params) {
   
   this.roleId = params.roleId;
   this.franchiseId = params.franchiseId;
-
 };
+
 
 
 Appointment.prototype.getRoleList = function () {
@@ -124,10 +124,11 @@ Appointment.prototype.fetchStaffList = function () {
       
       connection.changeUser({database : that.fdbName});
       let query = '';
-      query = 'select u.franchise_id, u.id, u.name, u.role_id, s.email, s.contact from user as u INNER JOIN staff as s ON u.id = s.franchise_user_id WHERE  u.is_active = 1 AND u.role_id LIKE "%'+that.roleId+'%"';
+      query = 'select (SELECT franchise_id FROM user WHERE id = 1)  as franchise_id, u.id, u.name, u.role_id, s.email, s.contact from user as u INNER JOIN staff as s ON u.id = s.franchise_user_id WHERE  u.is_active = 1 AND status = 1 AND u.role_id LIKE "%'+that.roleId+'%"';
 
       connection.query(query, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }
+        console.log(rows)
         resolve(rows);
       });
         connection.release();
@@ -167,7 +168,7 @@ Appointment.prototype.createTimeslot = function (franchiseId, userId, date, meet
       }
       connection.changeUser({database :dbName});
       const Values = [franchiseId, userId, date, meeting_time, start_time, end_time, status, is_active, userId, date];
-      console.log(Values);
+      // console.log(Values);
       connection.query('INSERT INTO appointment_timeslot(franchise_id, user_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }          
         resolve(rows);
@@ -231,7 +232,7 @@ Appointment.prototype.getCurrentTimeslot = function () {
         throw error;
       }
       connection.changeUser({database :dbName});
-      connection.query('SELECT at.id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, TIME_FORMAT(at.start_time, \'%H:%i\') as start_time, TIME_FORMAT(at.end_time, \'%H:%i\') as end_time,  at.status, (CASE at.status WHEN 1 THEN "Available" WHEN 2 THEN "On Leave" END) as status_name, at.is_active FROM `appointment_timeslot` AS at WHERE at.user_id = '+ that.userId +' AND at.is_active = 1 AND at.status IN (1,2) ORDER BY at.date, at.id', function (error, rows, fields) {
+      connection.query('SELECT at.id, at.franchise_id, at.user_id, DATE_FORMAT(at.date,\'%Y-%m-%d\') as date, at.meeting_time, TIME_FORMAT(at.start_time, \'%H:%i\') as start_time, TIME_FORMAT(at.end_time, \'%H:%i\') as end_time,  at.status, (CASE at.status WHEN 1 THEN "Available" WHEN 2 THEN "On Leave" END) as status_name, at.is_active FROM `appointment_timeslot` AS at WHERE at.user_id = '+ that.userId +' AND at.franchise_id = '+ that.franchiseId +' AND at.is_active = 1 AND at.status IN (1,2) ORDER BY at.date, at.id', function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }
         resolve(rows);        
       });
@@ -292,16 +293,16 @@ Appointment.prototype.bookAppointment = function () {
       connection.changeUser({database :dbName});
       
       const Values =  [
-        [that.userId, that.date, that.meeting_time, that.start_time, that.end_time, 1, 1] 
+        [that.franchiseId, that.userId, that.date, that.meeting_time, that.start_time, that.end_time, 1, 1] 
       ];
 
-      connection.query('INSERT INTO appointment_record (user_id, date, meeting_time, start_time, end_time, status, is_active) VALUES ?', [Values], function (error, rows, fields) {
+      connection.query('INSERT INTO appointment_record (franchise_id, user_id, date, meeting_time, start_time, end_time, status, is_active) VALUES ?', [Values], function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  } 
         
         const ClientData = [
-          [rows.insertId, that.userId, that.first_name, that.last_name, that.contact, that.reference, 1, 1]
+          [that.franchiseId, rows.insertId, that.userId, that.first_name, that.last_name, that.contact, that.reference, 1, 1]
         ];
-        connection.query('INSERT INTO appointed_client (appointment_id, user_id, first_name, last_name, contact, reference, status, is_active) VALUES ?', [ClientData], function (error, rows, fields) {
+        connection.query('INSERT INTO appointed_client (franchise_id, appointment_id, user_id, first_name, last_name, contact, reference, status, is_active) VALUES ?', [ClientData], function (error, rows, fields) {
           if (error) {  console.log("Error...", error); reject(error);  } 
           resolve(rows);
         });  
@@ -317,6 +318,7 @@ Appointment.prototype.bookAppointment = function () {
 Appointment.prototype.fetchBookedAppointmentList = function () {
   
   const that = this;
+  // console.log(that);
   return new Promise(function (resolve, reject) {
     connection.getConnection(function (error, connection) {
       if (error) {
@@ -324,7 +326,7 @@ Appointment.prototype.fetchBookedAppointmentList = function () {
       }
       
         connection.changeUser({database : dbName});
-        connection.query('SELECT ar.id, ar.user_id, DATE_FORMAT(ar.date,\'%Y-%m-%d\') as date, ar.meeting_time, TIME_FORMAT(ar.start_time, \'%H:%i\') as start_time, TIME_FORMAT(ar.end_time, \'%H:%i\') as end_time,  ar.status,  ar.is_active, ac.first_name, ac.last_name, ac.contact, ac.reference FROM `appointment_record` AS ar LEFT JOIN `appointed_client` as ac ON ar.id = ac.appointment_id WHERE ar.user_id = '+ that.userId +' AND ar.date = "'+ that.date +'" AND ar.is_active = 1 ORDER BY ar.date, ar.id', function (error, rows, fields) {        
+        connection.query('SELECT ar.id, ar.franchise_id, ar.user_id, DATE_FORMAT(ar.date,\'%Y-%m-%d\') as date, ar.meeting_time, TIME_FORMAT(ar.start_time, \'%H:%i\') as start_time, TIME_FORMAT(ar.end_time, \'%H:%i\') as end_time,  ar.status,  ar.is_active, ac.first_name, ac.last_name, ac.contact, ac.reference FROM `appointment_record` AS ar LEFT JOIN `appointed_client` as ac ON ar.id = ac.appointment_id WHERE ar.user_id = "'+ that.userId +'" AND ar.franchise_id = "'+ that.franchiseId +'" AND ar.date = "'+ that.date +'" AND ar.is_active = 1 ORDER BY ar.date, ar.id', function (error, rows, fields) { 
         if (error) {  console.log("Error...", error); reject(error);  }
         resolve(rows);        
       });

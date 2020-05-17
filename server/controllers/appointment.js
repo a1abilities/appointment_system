@@ -6,6 +6,7 @@ const {addOneDay, getCurrentDateDBFormat, escapeSunday} = require('../utils/date
 const getCurrentTimeslot = async function (req, res, next) {
 	const params = {
 		userId : req.body.userId,
+		franchiseId : req.body.franchiseId,
 	}
 
   try {
@@ -89,6 +90,7 @@ const addOrUpdateTimeslot = async function (req, res, next) {
 const bookAppointment = async function (req, res, next) {
 	const params = {
 		userId : req.body.userId,
+		franchiseId: req.body.franchiseId,
 		date : req.body.date,
 		meeting_time : req.body.meeting_time,
 		start_time : req.body.start_time,
@@ -98,15 +100,16 @@ const bookAppointment = async function (req, res, next) {
 		contact : req.body.contact,
 		reference : req.body.reference,
 	}
-
+// console.log(params);
   try {
 		const newActivity = new Appointment(params);
 		
 		await newActivity.bookAppointment();
 		
 		const timeSlot = await newActivity.getCurrentTimeslot();
-		const bookedList = await newActivity.fetchBookedAppointmentList();
+		// const bookedList = await newActivity.fetchBookedAppointmentList();
 
+		// console.log(bookedList);
 		res.send({ timeSlot: timeSlot, bookedList : bookedList });
 	} catch (err) {
 		next(err);
@@ -116,16 +119,20 @@ const bookAppointment = async function (req, res, next) {
 
 
 
-
 const fetchBookedAppointmentList = async function (req, res, next) {
+	console.log(req.body);
 	const params = {		
 		userId : req.body.userId,
+		franchiseId: req.body.franchiseId,
 		date : req.body.date,
 	}
+	console.log(params);
 
   try {
 		const newActivity = new Appointment(params);		
-		const bookedList = await newActivity.fetchBookedAppointmentList();		
+		const bookedList = await newActivity.fetchBookedAppointmentList();
+		console.log(bookedList);
+
 		res.send({ bookedList : bookedList  });
 	} catch (err) {
 		next(err);
@@ -171,17 +178,17 @@ const fetchStaffList = async function (req, res, next) {
 		
 		await newActivity.inActiveDueDatedTimeslot();
 		const membersList = await newActivity.fetchStaffList();
-				
+				// console.log(membersList);
 		if(membersList != null && membersList != undefined && membersList.length > 0){
 			membersList.map(async (data, index) => {
 				let date = getCurrentDateDBFormat();
 
 				for(let i = 0; i< 7; i++){
-					await newActivity.createTimeslot(params.franchiseId, data.id, date, '15', '09:00', '18:00', 1, 1);
-					date = addOneDay(date);
 					if(escapeSunday(date)){
 						date = addOneDay(date);
 					}
+					await newActivity.createTimeslot(params.franchiseId, data.id, date, '15', '09:00', '18:00', 1, 1);
+					date = addOneDay(date);
 				}
 			});
 		}
