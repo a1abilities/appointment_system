@@ -110,7 +110,7 @@ const bookAppointment = async function (req, res, next) {
 		// const bookedList = await newActivity.fetchBookedAppointmentList();
 
 		// console.log(bookedList);
-		res.send({ timeSlot: timeSlot, bookedList : bookedList });
+		res.send({ timeSlot: timeSlot });
 	} catch (err) {
 		next(err);
 	}

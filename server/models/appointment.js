@@ -167,9 +167,9 @@ Appointment.prototype.createTimeslot = function (franchiseId, userId, date, meet
         throw error;
       }
       connection.changeUser({database :dbName});
-      const Values = [franchiseId, userId, date, meeting_time, start_time, end_time, status, is_active, userId, date];
+      const Values = [franchiseId, userId, date, meeting_time, start_time, end_time, status, is_active, userId, date, franchiseId];
       // console.log(Values);
-      connection.query('INSERT INTO appointment_timeslot(franchise_id, user_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND is_active = 1 );', Values, function (error, rows, fields) {
+      connection.query('INSERT INTO appointment_timeslot(franchise_id, user_id, date, meeting_time, start_time, end_time, status, is_active) SELECT ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM appointment_timeslot WHERE user_id = ? AND date = ? AND franchise_id = ? AND is_active = 1 );', Values, function (error, rows, fields) {
         if (error) {  console.log("Error...", error); reject(error);  }          
         resolve(rows);
       });
