@@ -1,7 +1,3 @@
-import Config from './Config';
-//import React, {KEY } from 'react';
-
-
 // export const API_URL = 'http://appointment.a1abilities.co.nz'; // Config[KEY].API_URL;
 // export const AUTH_URL = 'http://appointment.a1abilities.co.nz'; // Config[KEY].AUTH_URL;
 // export const API_CONSUMER = 'http://appointment.a1abilities.co.nz'; // Config[KEY].API_URL;

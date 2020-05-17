@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomeTable({membersList, roleList, franchiseList, handleSubmit, inputs, errors, handleInputChange,
+export default function HomeTable({membersList, fdbName, roleList, franchiseList, handleSubmit, inputs, errors, handleInputChange,
   page, rowsPerPage, handleChangePage, handleChangeRowsPerPage }) {
   
   const classes = useStyles();   
@@ -114,29 +114,9 @@ export default function HomeTable({membersList, roleList, franchiseList, handleS
                         <Tooltip title="Book Appointment">
                           <span>
                             {/* <IconButton  size="small" onClick={(event) => { handleBookAppointment(data); }} > */}
-                              <Link to= {{pathname:"/bookappointment", state : {data:data}}}>
+                              <Link to= {{pathname:"/bookappointment", state : {data:data, fdbName: fdbName}}}>
                                 <ContactPhoneIcon />
                               </Link>
-                            {/* </IconButton> */}
-                          </span>
-                        </Tooltip>
-
-                        <Tooltip title="View Appointment">
-                          <span>                            
-                            {/* <IconButton  size="small" onClick={(event) => { handleViewAppointment(data); }}  > */}
-                            <Link to= {{pathname:"/viewappointment", state : {data:data}}}>
-                              <DateRangeIcon /> 
-                            </Link>
-                            {/* </IconButton> */}
-                          </span>
-                        </Tooltip>
-
-                        <Tooltip title="Update Timeslot">
-                          <span>
-                            {/* <IconButton  size="small" onClick={(event) => { handleUpdateTimeSlot(data); }}  > */}
-                            <Link to= {{pathname:"/updatetimeslot", state : {data:data}}}>
-                              <EditIcon />
-                            </Link>
                             {/* </IconButton> */}
                           </span>
                         </Tooltip>

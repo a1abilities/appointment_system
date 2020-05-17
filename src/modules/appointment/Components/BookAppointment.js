@@ -15,7 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DatePicker, useStaticState} from '@material-ui/pickers';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 
@@ -67,17 +67,19 @@ const RESET_VALUES = {
 export default function BookAppointment(props) {
   const classes = useStyles();
   const userData = props.data;
+  const fdbName = props.fdbName;
   const [currentTimeslotList, setCurrentTimeslotList] = useState([]);
   const [timingTable, setTimingTable] = useState(generateTimingTable);
   const [submitTime, setSubmitTime] = useState(0);
-
+  const [rerenderTimingBoard, setRerenderTimingBoard] = useState(0);
+  
   useEffect(() => {
     getCurrentTimeslot();
   },[]);
 
   const getCurrentTimeslot = async () => {
     try{
-      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id });
+      const result = await AppointmentAPI.getCurrentTimeslot({ userId : userData.id, franchiseId: userData.franchise_id });
       setCurrentTimeslotList(result.timeSlot);
       setFirstAvailableDate(result.timeSlot);
     }catch(e){
@@ -148,6 +150,7 @@ export default function BookAppointment(props) {
     try{
       const result = await AppointmentAPI.bookAppointment({
         userId : userData.id,
+        franchiseId : userData.franchise_id,
         date : getDate(inputs.appointment_date),
         meeting_time : inputs.meeting_time,
         start_time : inputs.start_time,
@@ -170,20 +173,21 @@ export default function BookAppointment(props) {
     }
   }
 
-  const handleRecallTimingBoard = async () => {
-    ReactDOM.render(
-        <TimingBoard
-          selectedDate = {getDate(inputs.appointment_date)} 
-          currentTimeslotList={currentTimeslotList}
-          timingTable = {timingTable}
-          handleAppointTimeSelection = {handleAppointTimeSelection}      
-          submitTime = {submitTime}
-          viewOnly = {false}
-        />, 
-        document.getElementById('timingBoard')
-    );
-    resetTiming();
-  }
+  
+  // const handleRecallTimingBoard = async () => {
+  //   ReactDOM.render(
+  //       <TimingBoard
+  //         selectedDate = {getDate(inputs.appointment_date)} 
+  //         currentTimeslotList={currentTimeslotList}
+  //         timingTable = {timingTable}
+  //         handleAppointTimeSelection = {handleAppointTimeSelection}      
+  //         submitTime = {submitTime}
+  //         viewOnly = {false}
+  //       />, 
+  //       document.getElementById('timingBoard')
+  //   );
+  //   resetTiming();
+  // }
   
   const { inputs, handleDateChange, handleNumberInput, handleInputChange, handleSubmit, handleReset, handleRandomInput, setInput, errors } = customHooks(    
     RESET_VALUES,
@@ -192,7 +196,9 @@ export default function BookAppointment(props) {
   );
   
   useEffect(() => {
-    handleRecallTimingBoard();
+    // handleRecallTimingBoard();
+    setRerenderTimingBoard(rerenderTimingBoard + 1);
+    resetTiming();
   },[inputs.appointment_date, inputs.meeting_time, submitTime]);
 
   return (
@@ -249,7 +255,17 @@ export default function BookAppointment(props) {
         <Grid item xs={12} sm={8}>
           <Typography  className={classes.textHeading} htmlFor="">TIMING BOARD</Typography>
           <Paper style={{ width: '100%' }}>
-            <div id = "timingBoard"></div>
+            {/* <div id = "timingBoard"></div>*/}
+            {rerenderTimingBoard && 
+                  <TimingBoard
+                    selectedDate = {getDate(inputs.appointment_date)} 
+                    currentTimeslotList={currentTimeslotList}
+                    timingTable = {timingTable}
+                    handleAppointTimeSelection = {handleAppointTimeSelection}      
+                    submitTime = {submitTime}
+                    viewOnly = {false}
+                  />
+            }
           </Paper>
         </Grid>
         <Grid item xs={12} sm={10}>

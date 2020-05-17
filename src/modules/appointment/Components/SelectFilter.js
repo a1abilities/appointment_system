@@ -41,7 +41,7 @@ export default function SelectFilter({franchiseList, roleList, inputs, handleInp
   return (   
         <Grid container spacing={4}  direction="row" justify="center" alignItems="center">    
             <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Position/Role </InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise List* </InputLabel>
                 <Select
                     name="franchise_id"
                     onChange={handleInputChange}
@@ -56,32 +56,33 @@ export default function SelectFilter({franchiseList, roleList, inputs, handleInp
                     error={errors.franchise_id}
                       helperText={errors.franchise_id}
                 >
-                    { ((roleList !== undefined && roleList!== "" && roleList.length > 0) ? roleList : []).map((data ) => {
-                        return( <MenuItem className={classes.drpdwn} value = {data.id}>{data.name}</MenuItem> )
+                    
+                    { ((franchiseList !== undefined && franchiseList!== "" && franchiseList.length > 0) ? franchiseList : []).map((data ) => {
+                        return( <MenuItem className={classes.drpdwn} value = {data.id}> {data.name}</MenuItem> )
                       })
                     } 
                 </Select>
             </Grid>        
             <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise List</InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="role_id">Role/Position *</InputLabel>
                 <Select
-                    name="franchise_id"
+                    name="role_id"
                     onChange={handleInputChange}
-                    value={inputs.franchise_id}
+                    value={inputs.role_id}
                     inputProps={{
-                        name: 'franchise_id',
-                        id: 'franchise_id',
+                        name: 'role_id',
+                        id: 'role_id',
                     }}
                     className={classes.drpdwn}
                     fullWidth                    
                     required
-                    error={errors.franchise_id}
-                      helperText={errors.franchise_id}
+                    error={errors.role_id}
+                      helperText={errors.role_id}
                 >
-                    { ((franchiseList !== undefined && franchiseList!== "" && franchiseList.length > 0) ? franchiseList : []).map((data ) => {
-                        return( <MenuItem className={classes.drpdwn} value = {data.id}> {data.name}</MenuItem> )
+                  { ((roleList !== undefined && roleList!== "" && roleList.length > 0) ? roleList : []).map((data ) => {
+                        return( <MenuItem className={classes.drpdwn} value = {data.id}>{data.name}</MenuItem> )
                       })
-                    } 
+                    }                     
                 </Select>
             </Grid>
             <Grid item xs={12} sm={3}>

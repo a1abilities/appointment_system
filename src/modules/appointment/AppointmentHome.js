@@ -31,7 +31,7 @@ export default function AppointmentHome() {
 
   const [roleList, setRoleList] = useState([]);  
   const [franchiseList, setFranchiseList] = useState([]);  
-
+  const [fdbName, setFdName] = useState('');
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -60,8 +60,8 @@ export default function AppointmentHome() {
 
 
   const fetchStaffList = async () => {
-    const dbName = franchiseList.find(ele => {return ele.id  == inputs.franchise_id })
-    // console.log(dbName);
+    const dbName = franchiseList.find(ele => {return ele.id  == inputs.franchise_id });
+    setFdName(dbName.fdbname);
     try{
       const result = await AppointmentAPI.fetchStaffList({
         fdbName : dbName.fdbname,
@@ -88,7 +88,7 @@ export default function AppointmentHome() {
   return (
     <div>   
       { membersList && 
-        <HomeTable  membersList = {membersList} roleList = {roleList} franchiseList = {franchiseList} handleSubmit={handleSubmit}
+        <HomeTable  membersList = {membersList} fdbName = {fdbName} roleList = {roleList} franchiseList = {franchiseList} handleSubmit={handleSubmit}
         inputs={inputs} handleInputChange={handleInputChange} errors= {errors}
         page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} />
       }

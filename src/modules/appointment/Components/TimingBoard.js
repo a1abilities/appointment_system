@@ -98,6 +98,7 @@ export default function TimingBoard({selectedDate, currentTimeslotList, timingTa
       if(currentTimeslotList != "" && currentTimeslotList != undefined && currentTimeslotList != null) {
         const result = await AppointmentAPI.fetchBookedAppointmentList({
           userId : currentTimeslotList[0].user_id,
+          franchiseId : currentTimeslotList[0].franchise_id,
           date : selectedDate,
         });
         setBookedAppointmentList(result.bookedList);
