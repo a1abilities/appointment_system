@@ -223,7 +223,6 @@ Appointment.prototype.updateExistingTimeslot = function () {
 }
 
 
-
 Appointment.prototype.getCurrentTimeslot = function () {
   const that = this;
   return new Promise(function (resolve, reject) {
