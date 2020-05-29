@@ -80,7 +80,7 @@ Appointment.prototype.fetchFranchiseList = function () {
       }
       
       connection.changeUser({database : dbName});
-      connection.query('select * from franchise', function (error, rows, fields) { 
+      connection.query('select * from franchise WHERE state = 2', function (error, rows, fields) { 
         if (error) {  console.log("Error...", error); reject(error);  }
           
         resolve(rows);              
