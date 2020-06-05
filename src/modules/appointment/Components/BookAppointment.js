@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
+
+import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -159,7 +161,9 @@ export default function BookAppointment(props) {
         last_name : inputs.last_name,
         contact : inputs.contact,
         reference : inputs.reference,
+        
       });
+      alert("Successfully Done ");
       setCurrentTimeslotList(result.timeSlot);
       handleRandomInput([
         {name : 'first_name', value: ''},
@@ -167,7 +171,8 @@ export default function BookAppointment(props) {
         {name : 'contact', value: ''},
         {name : 'reference', value: ''},
       ]);
-      setSubmitTime(submitTime + 1);      
+      setSubmitTime(submitTime + 1);  
+     
     }catch(e){
       console.log('Error...', e);
     }
@@ -193,6 +198,7 @@ export default function BookAppointment(props) {
     RESET_VALUES,
     submitForm,
     validate,
+    
   );
   
   useEffect(() => {
@@ -201,12 +207,18 @@ export default function BookAppointment(props) {
     resetTiming();
   },[inputs.appointment_date, inputs.meeting_time, submitTime]);
 
+  let history = useHistory();
+
+  
   return (
     <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
         <Grid item xs={12} sm={10}>
           <div style = {{display: 'flex'}}>
             <Typography variant="h6" className={classes.labelTitle}> Book Appointment </Typography>
-          </div>
+          
+            <Typography variant="h6" color="Green"onClick={() => history.goBack()} >Back</Typography> 
+            
+                      </div>
           <Divider variant="fullWidth" />
         </Grid>          
         <Grid item xs={12} sm={4}>
@@ -358,7 +370,8 @@ export default function BookAppointment(props) {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography className={classes.textHeading} htmlFor="reference">Action</Typography>
+                  
+                    <Typography className={classes.textHeading} htmlFor="reference" >Action</Typography>
                     <Button variant="contained" id="submitButton" color="primary" onClick = {handleSubmit}> SUBMIT </Button> 
                   </TableCell>
                 </TableRow>
