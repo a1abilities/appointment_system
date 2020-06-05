@@ -44,7 +44,9 @@ const useStyles = makeStyles(theme => ({
   labelTitle: {
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.pxToRem(20),
-    color: theme.palette.text.secondary,        
+    color: theme.palette.text.secondary,  
+    marginRight:(850)
+     
   },
   textHeading:{
     fontWeight: theme.typography.fontWeightBold,
@@ -216,8 +218,8 @@ export default function BookAppointment(props) {
           <div style = {{display: 'flex'}}>
             <Typography variant="h6" className={classes.labelTitle}> Book Appointment </Typography>
           
-            <Typography variant="h6" color="Green"onClick={() => history.goBack()} >Back</Typography> 
-            
+            <a  href="">    <Typography variant="h6" color="Red" onClick={() => history.goBack()} > Go Back</Typography> 
+            </a>
                       </div>
           <Divider variant="fullWidth" />
         </Grid>          
