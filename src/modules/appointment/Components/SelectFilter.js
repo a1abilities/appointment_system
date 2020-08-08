@@ -41,7 +41,7 @@ export default function SelectFilter({franchiseList, roleList, inputs, handleInp
   return (   
         <Grid container spacing={4}  direction="row" justify="center" alignItems="center">    
             <Grid item xs={12} sm={4}>
-                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Franchise List* </InputLabel>
+                <InputLabel  className={classes.textsize} htmlFor="franchise_id">Organisation List* </InputLabel>
                 <Select
                     name="franchise_id"
                     onChange={handleInputChange}

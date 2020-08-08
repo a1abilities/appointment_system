@@ -81,7 +81,7 @@ export default function HomeTable({membersList, fdbName, roleList, franchiseList
       <Paper className={classes.paper}>
         <Grid container spacing={4}  direction="row" justify="center" alignItems="center">
           <Grid item xs={12} sm={10}>
-            <Typography variant="h6" className={classes.labelTitle}> Franchise Members </Typography>
+            <Typography variant="h6" className={classes.labelTitle}> Organisation Members </Typography>
           </Grid>
           <Grid item xs={12} sm={10}>
             <SelectFilter franchiseList ={franchiseList} roleList={roleList} inputs={inputs} errors={errors} 
