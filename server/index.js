@@ -27,12 +27,12 @@ const appointmentRouter = require('./routes/appointment');
 app.use('/api/appointment', appointmentRouter);
 app.use('/',mainRoute);
 
-let port ='';
+let port ='3018';
 
 if(env === 'local'){
     port = 5000;
 }else if(env === 'prod'){
-    port = 3008;
+    port = 3018;
 }
 
 

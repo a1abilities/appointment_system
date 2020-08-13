@@ -1,12 +1,12 @@
-const env = 'local';
-let DbName = 'a1abiliti_fme';
-let domainName = 'appointment.a1abilities.co.nz';
+const env = 'prod';
+let DbName = 'connectiv_appointment';
+let domainName = 'appointment.connectivitysoftwaresolutions.com';
 
 console.log('env db', env);
 
 if (env === 'prod') {
-  DbName = 'a1abiliti_fme';
-  domainName = 'appointment.a1abilities.co.nz';
+  DbName = 'connectiv_appointment';
+  domainName = 'appointment.connectivitysoftwaresolutions.com';
 } else {  
   DbName = 'a1abiliti_fme'
   domainName = 'localhost:3000'

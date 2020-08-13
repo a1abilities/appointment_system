@@ -6,8 +6,8 @@ const { env, dbName } = require("./databaseMySQL");
 if (env === 'prod') {
    dbOptions = {
       host: 'localhost',
-      user: 'root',
-      password:'ekLZGG7L2bUYvpBv',
+      user: 'connectiv_appointment',
+      password:'!LZ5asrfI',
       port: 3306
    };
 } else {
